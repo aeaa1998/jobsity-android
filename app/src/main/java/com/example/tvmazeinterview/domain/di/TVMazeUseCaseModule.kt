@@ -12,6 +12,9 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 
+/**
+ * This module will inject all the use cases declared on the domain
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 class TVMazeUseCaseModule {

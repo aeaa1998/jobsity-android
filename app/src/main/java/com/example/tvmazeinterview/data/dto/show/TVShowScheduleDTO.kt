@@ -6,6 +6,9 @@ import com.example.tvmazeinterview.domain.traits.interfaces.ToEntity
 import com.google.gson.annotations.SerializedName
 
 
+/**
+ * DTO class to represent a TVShowSchedule
+ */
 data class TVShowScheduleDTO(
     @SerializedName("time")
     val time: String,

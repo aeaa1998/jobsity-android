@@ -11,6 +11,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+/**
+ * Singleton module for the Room database
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 class TVMazeDatabaseModule {

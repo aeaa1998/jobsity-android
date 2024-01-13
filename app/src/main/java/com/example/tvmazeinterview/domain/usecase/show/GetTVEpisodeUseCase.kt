@@ -8,6 +8,9 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 
+/**
+ * Use case used to get the detail of the episode
+ */
 class GetTVEpisodeUseCase @Inject constructor(
     private val tvEpisodesRepository: ITVEpisodeRepository,
 )  {

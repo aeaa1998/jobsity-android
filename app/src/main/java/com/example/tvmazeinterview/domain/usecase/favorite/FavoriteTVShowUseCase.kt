@@ -12,16 +12,24 @@ import javax.inject.Inject
 class FavoriteTVShowUseCase @Inject constructor(
     val tVShowRepository: ITVShowRepository
 ) {
+    //The flow containing all the favorites
     private val _favorites = MutableStateFlow(emptyList<TVShow>())
     val favorites: StateFlow<List<TVShow>>
         get() = _favorites
 
 
-
+    /**
+     * Fetch and emit favorites
+     */
     suspend fun getFavorites():StateFlow<List<TVShow>> {
         _favorites.emit(tVShowRepository.getFavorites())
         return favorites
     }
+
+    /**
+     * Handles the logic on how to toggle the favorite status
+     * @param tvShow [TVShow] The TVShow we want to toggle
+     */
     suspend fun toggleFavorite(tvShow: TVShow) {
         //Toggle
         val newValue = !tvShow.isFavorite.value
@@ -37,6 +45,7 @@ class FavoriteTVShowUseCase @Inject constructor(
         }
     }
 
+    //Helper function to emit the value in the flow
     private suspend fun processFavorite(tvShow: TVShow, isFavorite: Boolean) {
         if (isFavorite){
             _favorites.emit(favorites.value.toMutableList().apply {

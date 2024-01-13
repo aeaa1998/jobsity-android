@@ -25,18 +25,29 @@ import java.lang.Exception
 import javax.inject.Inject
 
 
+/**
+ * Use case used to get the pagination and the detail of the shows
+ */
 class GetTVShowUseCase @Inject constructor(
     private val tvShowsRepository: ITVShowRepository,
     private val tvEpisodesRepository: ITVEpisodeRepository,
 ) {
 
+    /**
+     * Handles the logic of the pagination
+     * @param query [Flow] Uses the flow query to combine it
+     * @param favorites [Flow] Uses the favorites query to combine it
+     * @param coroutineScope [CoroutineScope] The coroutine to cache in
+     */
     @OptIn(FlowPreview::class)
     fun getTVShows(query: Flow<String>, favorites: Flow<List<TVShow>>, coroutineScope: CoroutineScope) = tvShowsRepository.searchShows()
         .cachedIn(coroutineScope)
+        //After pagination we will need to filter by query
         .combine(query.debounce(500)) { dataSet, queryString ->
             dataSet
                 .filter { show -> show.name.lowercase().contains(queryString.lowercase()) }
         }
+        //After filtering lets see which ones are favorites
         .combine(favorites) { dataSet, favoritesTvs ->
             val ids = favoritesTvs.map { it.id }
             dataSet.map {
@@ -53,7 +64,7 @@ class GetTVShowUseCase @Inject constructor(
         emit(ResponseState.Loading())
         try {
             val result = coroutineScope {
-                //Throw then async
+                //Throw them async for better performance
                 val tvShowJob = async { tvShowsRepository.showById(id) }
                 val tvEpisodesJob = async { tvEpisodesRepository.getTVEpisodesFromShowId(id) }
                 val favoriteJob = async {
@@ -80,6 +91,7 @@ class GetTVShowUseCase @Inject constructor(
                     }
                 )
             }
+            //Emit everything went okay
             emit(ResponseState.Success(result))
         }catch (e: Exception){
             emit(ResponseState.Failed(e))

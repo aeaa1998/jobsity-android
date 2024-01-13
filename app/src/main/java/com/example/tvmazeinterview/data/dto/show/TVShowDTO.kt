@@ -8,6 +8,9 @@ import com.google.gson.annotations.SerializedName
 import java.time.format.DateTimeFormatter
 
 
+/**
+ * DTO class to represent a TVShow
+ */
 data class TVShowDTO(
     @SerializedName("id")
     val id: Int,

@@ -24,5 +24,5 @@ fun TVMazeShowFavoriteScreen(
     val favorites = viewModel.favorites.collectAsState()
 
 
-    TVMazeShowFavoriteContent(shows = favorites.value, actions = actions)
+    TVMazeShowFavoriteContent(shows = favorites.value.sortedBy { it.name }, actions = actions)
 }

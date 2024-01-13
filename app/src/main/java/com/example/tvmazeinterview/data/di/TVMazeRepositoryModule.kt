@@ -15,6 +15,9 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 
+/**
+ * Singleton module containing all of the repositories
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 class TVMazeRepositoryModule {

@@ -4,6 +4,9 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 
+/**
+ * Class to abstract the logic for diverse text types
+ */
 sealed class UIText {
     data class Raw(val _text: String) : UIText()
     data class Resource(@StringRes val id: Int) : UIText()

@@ -4,6 +4,9 @@ import com.example.tvmazeinterview.domain.model.episode.TVEpisode
 import com.example.tvmazeinterview.domain.traits.interfaces.ToEntity
 import com.google.gson.annotations.SerializedName
 
+/**
+ * DTO class to represent a TVEpisode
+ */
 data class TVEpisodeDTO(
     @SerializedName("id")
     val id: Int,

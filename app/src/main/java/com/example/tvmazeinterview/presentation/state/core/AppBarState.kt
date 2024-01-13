@@ -16,16 +16,21 @@ import androidx.lifecycle.LifecycleEventObserver
 import com.example.tvmazeinterview.R
 import com.example.tvmazeinterview.presentation.composition.LocalAppBarState
 
+//Class to represent an action
 data class AppBarAction(val icon: ImageVector, val action: () -> Unit)
 
+/**
+ * This class represents the BarState we use it to interact with the top level bar
+ */
 class AppBarState(
     private val _title: MutableState<UIText> = mutableStateOf<UIText>(UIText.Resource(R.string.app_name)),
     private val _actions: SnapshotStateList<AppBarAction> = mutableStateListOf<AppBarAction>()
 ) {
-
+    //Title of the app bar
     val title: State<UIText>
         get() = _title
 
+    //Actions of the app bar
     val actions: List<AppBarAction>
         get() = _actions
 
