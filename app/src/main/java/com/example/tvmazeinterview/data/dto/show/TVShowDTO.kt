@@ -1,5 +1,6 @@
 package com.example.tvmazeinterview.data.dto.show
 
+import com.example.tvmazeinterview.data.source.remote.local.roomdb.entity.TVMazeShowEntity
 import com.example.tvmazeinterview.domain.model.show.TVShow
 import com.example.tvmazeinterview.domain.model.show.TVShowSchedule
 import com.example.tvmazeinterview.domain.traits.interfaces.ToEntity
@@ -19,7 +20,7 @@ data class TVShowDTO(
     @SerializedName("summary")
     val summary: String?,
     @SerializedName("image")
-    val image: Map<String, String>?,
+    val image: Map<String, String?>?,
     @SerializedName("rating")
     val rating: Map<String, Double?>?,
     @SerializedName("premiered")
@@ -31,12 +32,25 @@ data class TVShowDTO(
         return TVShow(
             id = id,
             name = name,
-            poster = image?.firstNotNullOf { it.value },
+            poster = image?.firstNotNullOfOrNull { it.value },
             schedule = schedule.toEntity(),
             genres = genres,
             summary = summary,
             premiered = premiered,
             rating = rating?.firstNotNullOfOrNull { it.value }
+        )
+    }
+
+    fun toRoomEntity() : TVMazeShowEntity {
+        return TVMazeShowEntity(
+            id = id,
+            name = name,
+            poster = image?.firstNotNullOf { it.value },
+            schedule = schedule.toEntity(),
+            genres = genres,
+            summary = summary,
+            premiered = premiered,
+            rating = rating?.firstNotNullOfOrNull { it.value },
         )
     }
 }

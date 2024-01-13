@@ -2,6 +2,7 @@ package com.example.tvmazeinterview.domain.di
 
 import com.example.tvmazeinterview.domain.repository.ITVEpisodeRepository
 import com.example.tvmazeinterview.domain.repository.ITVShowRepository
+import com.example.tvmazeinterview.domain.usecase.favorite.FavoriteTVShowUseCase
 import com.example.tvmazeinterview.domain.usecase.show.GetTVEpisodeUseCase
 import com.example.tvmazeinterview.domain.usecase.show.GetTVShowUseCase
 import dagger.Module
@@ -27,4 +28,10 @@ class TVMazeUseCaseModule {
     fun providesGetTVEpisodeUseCase(
         tvEpisodesRepository: ITVEpisodeRepository,
     ) = GetTVEpisodeUseCase(tvEpisodesRepository)
+
+    @Provides
+    @Singleton
+    fun providesFavoriteTVShowUseCase(
+        tvShowsRepository: ITVShowRepository,
+    ) = FavoriteTVShowUseCase(tvShowsRepository)
 }

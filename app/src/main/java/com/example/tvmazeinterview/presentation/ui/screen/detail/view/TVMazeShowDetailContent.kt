@@ -75,7 +75,7 @@ fun TVMazeShowDetailContent(
                     .verticalScroll(verticalScrollState),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                TVMazeShowDetailHeader(tvShow = tvShow)
+                TVMazeShowDetailHeader(tvShow = tvShow, actions.onFavorite)
 
                 TVMazeShowDetailTabs(selectedIndex, actions.onTabSelected)
 
@@ -99,7 +99,7 @@ fun TVMazeShowDetailContent(
 
         is ResponseState.Loading -> DetailLoadingView()
 
-        is ResponseState.Failed -> ScreenError()
+        is ResponseState.Failed -> ScreenError(onRetry = actions.onRetry)
     }
 }
 
@@ -170,6 +170,6 @@ fun TVMazeShowDetailContentPreview(){
             }
         )),
         1,
-        TVMazeShowDetailActions({}, {}, {})
+        TVMazeShowDetailActions({}, {}, {}, {})
     )
 }

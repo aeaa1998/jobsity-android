@@ -4,6 +4,8 @@ import com.example.tvmazeinterview.data.repository.episode.TVEpisodeRepository
 import com.example.tvmazeinterview.data.repository.show.TVShowRepository
 import com.example.tvmazeinterview.data.source.remote.api.episode.TVEpisodeApi
 import com.example.tvmazeinterview.data.source.remote.api.show.TVShowApi
+import com.example.tvmazeinterview.data.source.remote.local.roomdb.dao.FavoriteTVMazeShowDao
+import com.example.tvmazeinterview.data.source.remote.local.roomdb.dao.TVMazeShowEntityDao
 import com.example.tvmazeinterview.domain.repository.ITVEpisodeRepository
 import com.example.tvmazeinterview.domain.repository.ITVShowRepository
 import dagger.Module
@@ -20,8 +22,10 @@ class TVMazeRepositoryModule {
     @Provides
     @Singleton
     fun providesTVShowRepository(
-        tvShowApi: TVShowApi
-    ) : ITVShowRepository = TVShowRepository(tvShowApi)
+        tvShowApi: TVShowApi,
+        tvMazeShowEntityDao: TVMazeShowEntityDao,
+        favoriteTVMazeShowDao: FavoriteTVMazeShowDao
+    ) : ITVShowRepository = TVShowRepository(tvShowApi, tvMazeShowEntityDao, favoriteTVMazeShowDao)
 
     @Provides
     @Singleton

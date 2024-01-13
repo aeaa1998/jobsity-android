@@ -16,7 +16,7 @@ data class TVEpisodeDTO(
     @SerializedName("summary")
     val summary: String?,
     @SerializedName("image")
-    val image: Map<String, String>,
+    val image: Map<String, String?>?,
     @SerializedName("runtime")
     val runtime: Int,
 ) : ToEntity<TVEpisode>{
@@ -27,7 +27,7 @@ data class TVEpisodeDTO(
             number = number,
             season = season,
             summary = summary,
-            image = image.firstNotNullOf { it.value },
+            image = image?.firstNotNullOfOrNull { it?.value },
             runtime = runtime
         )
     }

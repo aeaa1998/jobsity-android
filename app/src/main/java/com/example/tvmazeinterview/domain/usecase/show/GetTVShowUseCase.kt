@@ -2,8 +2,10 @@ package com.example.tvmazeinterview.domain.usecase.show
 
 import androidx.paging.cachedIn
 import androidx.paging.filter
+import androidx.paging.map
 import com.example.tvmazeinterview.domain.model.misc.ResponseState
 import com.example.tvmazeinterview.domain.model.season.TVSeason
+import com.example.tvmazeinterview.domain.model.show.TVShow
 import com.example.tvmazeinterview.domain.model.show.TVShowDetail
 import com.example.tvmazeinterview.domain.repository.ITVEpisodeRepository
 import com.example.tvmazeinterview.domain.repository.ITVShowRepository
@@ -22,16 +24,25 @@ import kotlinx.coroutines.flow.map
 import java.lang.Exception
 import javax.inject.Inject
 
+
 class GetTVShowUseCase @Inject constructor(
     private val tvShowsRepository: ITVShowRepository,
     private val tvEpisodesRepository: ITVEpisodeRepository,
 ) {
 
     @OptIn(FlowPreview::class)
-    fun getTVShows(query: Flow<String>, coroutineScope: CoroutineScope) = tvShowsRepository.searchShows()
+    fun getTVShows(query: Flow<String>, favorites: Flow<List<TVShow>>, coroutineScope: CoroutineScope) = tvShowsRepository.searchShows()
         .cachedIn(coroutineScope)
         .combine(query.debounce(500)) { dataSet, queryString ->
-            dataSet.filter { show -> show.name.lowercase().contains(queryString.lowercase()) }
+            dataSet
+                .filter { show -> show.name.lowercase().contains(queryString.lowercase()) }
+        }
+        .combine(favorites) { dataSet, favoritesTvs ->
+            val ids = favoritesTvs.map { it.id }
+            dataSet.map {
+                it.isFavorite.value = ids.contains(it.id)
+                it
+            }
         }
         .distinctUntilChanged()
         .cachedIn(coroutineScope)
@@ -45,12 +56,23 @@ class GetTVShowUseCase @Inject constructor(
                 //Throw then async
                 val tvShowJob = async { tvShowsRepository.showById(id) }
                 val tvEpisodesJob = async { tvEpisodesRepository.getTVEpisodesFromShowId(id) }
+                val favoriteJob = async {
+                    try {
+                        tvShowsRepository.getFavoritesById(id)
+                    }catch (e: Exception){
+                        null
+                    }
+                }
                 val tvShow = tvShowJob.await()
                 val episodes = tvEpisodesJob.await()
+                val favorite = favoriteJob.await()
+
                 val episodesBySeason = episodes.groupBy { it.season }
                 //Return the detail with the episodes
                 TVShowDetail(
-                    tvShow,
+                    tvShow.apply {
+                         isFavorite.value = favorite != null
+                    },
                     //Reduce the keys into a list of seasons
                     episodesBySeason.keys.fold(mutableListOf()) { carry, item ->
                         carry.add(TVSeason(item, episodesBySeason.getOrDefault(item, emptyList())))

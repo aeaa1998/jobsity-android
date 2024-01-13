@@ -3,15 +3,19 @@ package com.example.tvmazeinterview.data.source.paging.show
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.tvmazeinterview.data.source.remote.api.show.TVShowApi
+import com.example.tvmazeinterview.data.source.remote.local.roomdb.dao.FavoriteTVMazeShowDao
+import com.example.tvmazeinterview.data.source.remote.local.roomdb.dao.TVMazeShowEntityDao
 import com.example.tvmazeinterview.data.utils.extensions.toJsonArray
 import com.example.tvmazeinterview.data.utils.extensions.toJsonObject
 import com.example.tvmazeinterview.domain.model.show.TVShow
+import kotlinx.coroutines.coroutineScope
 import retrofit2.HttpException
 import java.lang.Exception
 import javax.inject.Inject
 
 class TVShowPagingSource (
     private val tvShowApi: TVShowApi,
+    private val tvMazeShowEntityDao: TVMazeShowEntityDao
 ) : PagingSource<Int, TVShow>() {
     override fun getRefreshKey(state: PagingState<Int, TVShow>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
@@ -25,8 +29,13 @@ class TVShowPagingSource (
         return try {
 
             val tvShowsDtos = tvShowApi.getShows(currentPage)
+            val tvShows = tvShowsDtos.map { it.toEntity() }
+
+            tvMazeShowEntityDao.insert(tvShowsDtos.map { it.toRoomEntity() })
+
+
             LoadResult.Page(
-                data = tvShowsDtos.map { it.toEntity() },
+                data = tvShows,
                 prevKey = if (currentPage == 0) null else currentPage - 1,
                 nextKey = if (tvShowsDtos.isEmpty()) null else currentPage + 1,
             )

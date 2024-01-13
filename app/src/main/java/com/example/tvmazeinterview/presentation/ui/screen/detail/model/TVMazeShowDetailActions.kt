@@ -15,7 +15,8 @@ import com.example.tvmazeinterview.presentation.ui.viewmodel.show.detail.TVMazeS
 data class TVMazeShowDetailActions(
     val onTabSelected: (Int) -> Unit,
     val onTVEpisodeSelected: (TVEpisode) -> Unit,
-    val onRetry: () -> Unit
+    val onRetry: () -> Unit,
+    val onFavorite: (TVShow) -> Unit
 )
 
 @Composable
@@ -34,6 +35,9 @@ fun rememberTVMazeShowDetailActions(
             },
             onRetry = {
                 viewModel.getTvShowDetail(id)
+            },
+            onFavorite = {
+                viewModel.toggleFavorite(it)
             }
         )
     }

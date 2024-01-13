@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import com.example.tvmazeinterview.presentation.ui.navigation.destination.composable
 import com.example.tvmazeinterview.presentation.ui.screen.detail.view.TVMazeShowDetailScreen
 import com.example.tvmazeinterview.presentation.ui.screen.episode.view.TVMazeEpisodeScreen
+import com.example.tvmazeinterview.presentation.ui.screen.favorite.views.TVMazeShowFavoriteScreen
 import com.example.tvmazeinterview.presentation.ui.screen.home.view.TVMazeShowHomeScreen
 
 @Composable
@@ -33,6 +34,10 @@ fun TVMazeShowsNavHost(
 
             composable(TVEpisodeDetail){ backStackEntry ->
                 backStackEntry.arguments?.getInt("id")?.let { TVMazeEpisodeScreen(it) }
+            }
+
+            composable(TVShowFavorites){
+                TVMazeShowFavoriteScreen(navController = navController)
             }
         }
     }

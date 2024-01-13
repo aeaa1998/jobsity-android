@@ -37,4 +37,8 @@
     <string name="error_default_message">While we where requesting your data something went wrong.\nIf problems persist please contact support.</string>
 
 
+    <!--  Favorites  -->
+    <string name="favorites">Favorites</string>
+    <string name="no_favorites_found_title">No favorites yet</string>
+    <string name="no_favorites_found_message">You have not saved shows as favorites.</string>
 </resources>

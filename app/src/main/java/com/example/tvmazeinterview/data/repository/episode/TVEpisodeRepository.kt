@@ -9,7 +9,8 @@ import javax.inject.Inject
 
 class TVEpisodeRepository @Inject constructor(private val tvEpisodeApi: TVEpisodeApi) : ITVEpisodeRepository {
     override suspend fun getTVEpisodesFromShowId(id: Int): List<TVEpisode> {
-        return tvEpisodeApi.getEpisodesFromShow(id).map { it.toEntity() }
+        val episodes = tvEpisodeApi.getEpisodesFromShow(id)
+        return episodes.map { it.toEntity() }
     }
 
     override suspend fun getTVEpisode(id: Int): TVEpisodeDetail {

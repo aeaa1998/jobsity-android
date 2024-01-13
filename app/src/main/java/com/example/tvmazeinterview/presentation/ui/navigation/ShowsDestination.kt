@@ -20,6 +20,10 @@ object TVMazeDestinations {
         arguments = listOf(navArgument("id") { type = NavType.IntType })
     )
 
+    val TVShowFavorites = NavDestination(
+        route = "favorites",
+    )
+
 
     val InitialDestinations: List<NavDestination>
         get() = listOf(ShowsDestination)

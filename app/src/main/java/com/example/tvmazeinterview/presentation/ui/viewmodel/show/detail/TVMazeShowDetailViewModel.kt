@@ -7,7 +7,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tvmazeinterview.domain.model.misc.ResponseState
+import com.example.tvmazeinterview.domain.model.show.TVShow
 import com.example.tvmazeinterview.domain.model.show.TVShowDetail
+import com.example.tvmazeinterview.domain.usecase.favorite.FavoriteTVShowUseCase
 import com.example.tvmazeinterview.domain.usecase.show.GetTVShowUseCase
 import com.example.tvmazeinterview.presentation.ui.screen.detail.model.TVMazeShowDetailTab
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TVMazeShowDetailViewModel @Inject constructor(
-    val getTVShowUseCase: GetTVShowUseCase
+    val getTVShowUseCase: GetTVShowUseCase,
+    val favoriteTVShowUseCase: FavoriteTVShowUseCase
 ) : ViewModel() {
 
     private val _state: MutableState<ResponseState<TVShowDetail>> = mutableStateOf(ResponseState.Loading())
@@ -38,5 +41,9 @@ class TVMazeShowDetailViewModel @Inject constructor(
                     _state.value = response
                 }
 
+    }
+
+    fun toggleFavorite(tvShow: TVShow) = viewModelScope.launch {
+        favoriteTVShowUseCase.toggleFavorite(tvShow)
     }
 }

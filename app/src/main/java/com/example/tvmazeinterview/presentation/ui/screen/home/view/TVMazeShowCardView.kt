@@ -10,12 +10,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,19 +32,21 @@ import com.example.tvmazeinterview.presentation.ui.component.entity.tvshow.TVMaz
 import com.example.tvmazeinterview.presentation.ui.component.entity.tvshow.TVMazeShowImage
 import com.example.tvmazeinterview.presentation.ui.component.entity.tvshow.TVMazeShowPremieredText
 import com.example.tvmazeinterview.presentation.ui.component.common.misc.Rating
+import com.example.tvmazeinterview.presentation.ui.component.core.Weight
 import com.example.tvmazeinterview.presentation.ui.theme.paddings
 
 
 @Composable
 fun TVMazeShowCardView(
     tvShow: TVShow,
-    onTVShowClicked: (TVShow) -> Unit = {}
+    onTVShowClicked: (TVShow) -> Unit = {},
+    onTVShowFavorite: (TVShow) -> Unit = {}
 ) {
     val colors = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
     val context = LocalContext.current
     val paddings = MaterialTheme.paddings
-
+    val isFavorite = tvShow.isFavorite.collectAsState()
 
 
     Row(
@@ -50,7 +58,10 @@ fun TVMazeShowCardView(
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        TVMazeShowImage(tvShow, modifier = Modifier.clip(MaterialTheme.shapes.extraSmall).width(80.dp).height(100.dp))
+        TVMazeShowImage(tvShow, modifier = Modifier
+            .clip(MaterialTheme.shapes.extraSmall)
+            .width(80.dp)
+            .height(100.dp))
         Column(
             Modifier
                 .padding(paddings.medium)
@@ -58,11 +69,23 @@ fun TVMazeShowCardView(
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             Column {
-                Text(
-                    text = tvShow.name,
-                    style = typography.titleSmall,
-                    color = colors.onSecondaryContainer
-                )
+                Row {
+                    Text(
+                        text = tvShow.name,
+                        style = typography.titleSmall,
+                        color = colors.onSecondaryContainer
+                    )
+                    Weight()
+                    Icon(
+                        imageVector = Icons.Filled.Favorite,
+                        contentDescription = "Is favorite",
+                        modifier = Modifier.clickable {
+                            onTVShowFavorite(tvShow)
+                        },
+                        tint = if (isFavorite.value) Color.Red else Color.Black
+                    )
+                }
+
                 TVMazeShowPremieredText(tvShow)
             }
 
@@ -105,7 +128,8 @@ fun TVMazeShowCardViewPreview(){
                     genres = listOf("Drama", "Romance"),
                     summary = "<p>This Emmy winning series is a comic look at the assorted humiliations and rare triumphs of a group of girls in their 20s.</p>",
                     premiered = "2001-03-10"
-                ))
+                )
+            )
         }
     }
 

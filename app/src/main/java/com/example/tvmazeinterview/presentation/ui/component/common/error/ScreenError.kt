@@ -55,7 +55,7 @@ fun ScreenError(
         //On retry was defined so lets render the retry button
         if (onRetry != null){
             TextButton(
-                onClick = { /*TODO*/ },
+                onClick = onRetry,
                 modifier = Modifier.defaultMinSize(minWidth = 120.dp),
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = MaterialTheme.colorScheme.error,

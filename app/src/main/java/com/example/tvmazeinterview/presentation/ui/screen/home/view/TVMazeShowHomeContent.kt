@@ -88,7 +88,11 @@ fun TVMazeShowHomeContent(
                 ){
                     items(shows.itemCount){ index ->
                         shows[index]?.let { show ->
-                            TVMazeShowCardView(tvShow = show, onTVShowClicked = actions.onTVShowClicked)
+                            TVMazeShowCardView(
+                                tvShow = show,
+                                onTVShowClicked = actions.onTVShowClicked,
+                                onTVShowFavorite = actions.onFavorite
+                            )
                         }
                     }
 
@@ -145,6 +149,6 @@ private fun TVMazeShowHomeContentPreview(){
     TVMazeShowHomeContent(
         items,
         "",
-        TVMazeShowHomeActions({}, {}, {})
+        TVMazeShowHomeActions({}, {}, {}, {})
     )
 }
